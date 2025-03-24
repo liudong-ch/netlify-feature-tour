@@ -1,108 +1,250 @@
 ---
+// filepath: d:\Project\netlify-feature-tour\src\pages\index.astro
 import Layout from '../components/layout.astro';
+
+// 定义二维码图片的路径
+const qrCodeUrl = '/111.png'; // 所有按钮共享同一张二维码图片
 ---
 
+<script is:inline>
+  // 使用 window 对象使函数全局可用
+  window.currentQRCode = null;
+
+  window.toggleQRCode = function(buttonId) {
+    // 隐藏当前显示的二维码
+    if (window.currentQRCode && window.currentQRCode !== buttonId) {
+      const currentElement = document.getElementById(`qr-container-${window.currentQRCode}`);
+      if (currentElement) {
+        currentElement.style.display = 'none';
+      }
+    }
+
+    // 切换二维码显示状态
+    const qrCodeElement = document.getElementById(`qr-container-${buttonId}`);
+    if (qrCodeElement) {
+      if (qrCodeElement.style.display === 'none') {
+        qrCodeElement.style.display = 'block';
+        window.currentQRCode = buttonId;
+      } else {
+        qrCodeElement.style.display = 'none';
+        window.currentQRCode = null;
+      }
+    }
+  }
+</script>
+
 <style>
-.steps {
+.plans {
   background: var(--light);
   display: grid;
-  gap: 2rem;
-  grid-template-columns: min(90vw, 250px);
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 增大最小宽度 */
   justify-content: center;
-  margin-top: 3rem;
-  padding: 5rem 5vw;
-  width: 100vw;
+  margin-top: 2rem;
+  padding: 3rem 5vw;
 }
 
-@media (min-width: 550px) {
-  .steps {
-    grid-template-columns: repeat(2, min(calc(50% - 1rem), 250px));
-  }
-}
-
-@media (min-width: 1050px) {
-  .steps {
-    grid-template-columns: repeat(4, min(calc(25% - 1.5rem), 250px));
-  }
-}
-
-.step {
+.plan {
   background: var(--white);
   border: 1px solid var(--lightBorder);
   border-radius: var(--card-radius);
   display: flex;
   flex-direction: column;
-  font-size: 0.75rem;
-  padding: 1rem 1.5rem 1.5rem;
-  text-align: left;
+  font-size: 0.9rem;
+  padding: 1.5rem;
   box-shadow: 0 2px 4px rgb(14 30 37 / 12%);
 }
 
-.stepHeading {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
+.planHeading {
+  font-size: 1.5rem; /* 增大标题字体 */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
+.planPrice {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0.5rem 0;
+  text-align: center;
+}
 
+.planDetails {
+  margin: 0.5rem 0; /* 减少上下间距 */
+  line-height: 0.6; /* 调整行高，提升可读性 */
+  width: 100%; /* 确保列表充满父组件 */
+}
+
+.planDetails ul {
+  padding: 0;
+  margin: 0;
+  list-style: none; /* 去掉默认的列表样式 */
+}
+
+.planDetails li {
+  margin-bottom: 0.5rem; /* 减少列表项之间的间距 */
+  padding-left: 0.5rem; /* 调整左侧缩进 */
+  position: relative;
+  text-align: left; /* 确保左对齐 */
+}
+
+.planDetails li::before {
+  content: '✔'; /* 添加一个勾选符号 */
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.button,
+a.button {
+  background: var(--primary);
+  border-radius: 4px;
+  color: var(--white);
+  display: inline-block;
+  font-weight: 800;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  width: max-content;
+  transition-duration: 0.2s;
+  margin: 1rem auto 0; /* 上下间距，按钮水平居中 */
+  text-align: center; /* 确保按钮文字居中 */
+}
+
+a.button:hover,
+a.button:focus,
+.button:hover,
+.button:focus {
+  background: var(--primary-darker);
+}
+
+.qr-code {
+  margin-top: 1rem;
+  text-align: center;
+  display: none;
+}
+
+.qr-code img {
+  width: 250px; /* 只设置宽度 */
+  height: auto; /* 高度自适应，保持原始比例 */
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.qr-code p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
 </style>
 
 <Layout
-  title="Netlify Feature Tour"
-  description="This is a small site to show the most powerful features of Netlify quickly!"
+  title="VPN 套餐介绍"
+  description="选择适合您的 VPN 套餐，享受高速、安全、稳定的网络体验！"
   home
 >
-  <main class="steps">
-    <section class="step">
-      <h2 class="stepHeading">Deploy Previews</h2>
-      <p>
-        Every pull request is automatically built in an
-        identical-to-production environment for
-        <strong>painless QA, feedback, and review.</strong>
-      </p>
-      <a href="/deploy-previews" class="button">
-        Learn more <span class="sr-only">about Deploy Previews</span>
-      </a>
+  <main class="plans">
+
+  <section class="plan">
+      <h2 class="planHeading">推荐套餐</h2>
+      <p class="planPrice">120元 / 年</p>
+        <ul>
+          <li>每月流量：500G，高速流量</li>
+          <li>稳定流媒体解锁</li>
+          <li>三网运营商高质量线路</li>
+          <li>全线路高加密，保护隐私安全！</li>
+          <li>不限制客户端数量</li>
+          <li>不限制网速</li>
+          <li>无使用时长限制</li>
+          <li>总线路接入100Gbps以上带宽</li>
+        </ul>
+      <a href="javascript:void(0);" class="button" onclick="toggleQRCode('basic')">立即订阅</a>
+      <div class="qr-code" id="qr-container-basic" style="display: none;">
+        <img src={qrCodeUrl} alt="二维码" />
+        <p>扫描二维码添加好友购买</p>
+      </div>
     </section>
 
-    <section class="step">
-      <h2 class="stepHeading">Instant Rollbacks</h2>
-      <p>
-        Confidently ship to production with the knowledge that it’s a
-        one-click operation to roll back to a previous version of the site.
-        <strong>Instant disaster recovery!</strong>
-      </p>
-      <a href="/instant-rollbacks" class="button">
-        Learn more
-        <span class="sr-only">about Instant Rollbacks</span>
-      </a>
+    <section class="plan">
+      <h2 class="planHeading">基础套餐</h2>
+      <p class="planPrice">45元 / 3月</p>
+        <ul>
+          <li>每月流量：100G，高速流量</li>
+          <li>稳定流媒体解锁</li>
+          <li>三网运营商高质量线路</li>
+          <li>全线路高加密，保护隐私安全！</li>
+          <li>不限制客户端数量</li>
+          <li>不限制网速</li>
+          <li>无使用时长限制</li>
+          <li>总线路接入100Gbps以上带宽</li>
+        </ul>
+      <a href="javascript:void(0);" class="button" onclick="toggleQRCode('basic-plan')">立即订阅</a>
+      <div class="qr-code" id="qr-container-basic-plan" style="display: none;">
+        <img src={qrCodeUrl} alt="二维码" />
+        <p>扫描二维码添加好友购买</p>
+      </div>
     </section>
 
-    <section class="step">
-      <h2 class="stepHeading">Netlify Functions</h2>
-      <p>
-        <strong>Serverless functions are superpowers for web developers!</strong>
-        Securely handle server-like requirements at any scale with no
-        provisioning, scaling, or ops overhead.
-      </p>
-      <a href="/functions" class="button">
-      Learn more
-      <span class="sr-only">about Netlify Functions</span>
-      </a>
+    <section class="plan">
+      <h2 class="planHeading">进阶套餐</h2>
+      <p class="planPrice">60元 / 3月</p>
+        <ul>
+          <li>每月流量：500G，高速流量</li>
+          <li>稳定流媒体解锁</li>
+          <li>三网运营商高质量线路</li>
+          <li>全线路高加密，保护隐私安全！</li>
+          <li>不限制客户端数量</li>
+          <li>不限制网速</li>
+          <li>无使用时长限制</li>
+          <li>总线路接入100Gbps以上带宽</li>
+        </ul>
+      <a href="javascript:void(0);" class="button" onclick="toggleQRCode('advanced-plan')">立即订阅</a>
+      <div class="qr-code" id="qr-container-advanced-plan" style="display: none;">
+        <img src={qrCodeUrl} alt="二维码" />
+        <p>扫描二维码添加好友购买</p>
+      </div>
     </section>
 
-    <section class="step">
-      <h2 class="stepHeading">Netlify Forms</h2>
-      <p>
-        Handle user input with a single line of code. Netlify Forms allow
-        any HTML form to
-        <strong>
-            accept submissions, send notification emails, and trigger custom events.
-        </strong>
-      </p>
-      <a href="/netlify-forms" class="button">
-        Learn more <span class="sr-only">about Netlify Forms</span>
-      </a>
+    <section class="plan">
+      <h2 class="planHeading">高级套餐</h2>
+      <p class="planPrice">90元 / 3月</p>
+        <ul>
+          <li>每月流量：1000G，高速流量</li>
+          <li>稳定流媒体解锁</li>
+          <li>三网运营商高质量线路</li>
+          <li>全线路高加密，保护隐私安全！</li>
+          <li>不限制客户端数量</li>
+          <li>不限制网速</li>
+          <li>无使用时长限制</li>
+          <li>总线路接入100Gbps以上带宽</li>
+        </ul>
+      <a href="javascript:void(0);" class="button" onclick="toggleQRCode('pro-plan')">立即订阅</a>
+      <div class="qr-code" id="qr-container-pro-plan" style="display: none;">
+        <img src={qrCodeUrl} alt="二维码" />
+        <p>扫描二维码添加好友购买</p>
+      </div>
     </section>
+
+    <section class="plan">
+      <h2 class="planHeading">尊享套餐</h2>
+      <p class="planPrice">120元 / 3月</p>
+        <ul>
+          <li>每月流量：3000G，高速流量</li>
+          <li>稳定流媒体解锁</li>
+          <li>三网运营商高质量线路</li>
+          <li>全线路高加密，保护隐私安全！</li>
+          <li>不限制客户端数量</li>
+          <li>不限制网速</li>
+          <li>无使用时长限制</li>
+          <li>总线路接入100Gbps以上带宽</li>
+        </ul>
+      <a href="javascript:void(0);" class="button" onclick="toggleQRCode('premium-plan')">立即订阅</a>
+      <div class="qr-code" id="qr-container-premium-plan" style="display: none;">
+        <img src={qrCodeUrl} alt="二维码" />
+        <p>扫描二维码添加好友购买</p>
+      </div>
+    </section>
+
+    
   </main>
 </Layout>
